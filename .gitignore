@@ -23,3 +23,18 @@
 hs_err_pid*
 
 hassio-config/*
+
+Thumbs.db
+.DS_Store
+.gradle
+build/
+target/
+out/
+.idea
+*.iml
+*.ipr
+*.iws
+.project
+.settings
+.classpath
+.factorypath

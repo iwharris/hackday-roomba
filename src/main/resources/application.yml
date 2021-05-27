@@ -1,0 +1,7 @@
+micronaut:
+  application:
+    name: hackdayRoomba
+  session:
+    http:
+      cookie: true
+      header: true
