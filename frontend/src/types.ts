@@ -1,5 +1,7 @@
 import { Connection, HassEntities, HassServices, HassUser } from 'home-assistant-js-websocket';
 
+export type Position3D = [number, number, number];
+
 export interface AppState {
     entities?: HassEntities;
     services?: HassServices;
@@ -8,6 +10,9 @@ export interface AppState {
     connection?: Connection;
 
     roombaState?: RoombaState;
+
+    position?: Position3D;
+    prevPosition?: Position3D;
 }
 
 export interface RoombaState {
@@ -22,8 +27,6 @@ export interface RoombaState {
 
     isBinFull?: boolean;
     binIcon?: string;
-
-    position?: [number, number, number];
 }
 
 export enum RoombaStatus {

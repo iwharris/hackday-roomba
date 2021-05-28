@@ -1,6 +1,6 @@
 import * as hass from 'home-assistant-js-websocket';
 import { saveTokens, loadTokens } from './auth-util';
-import { RoombaState, AppState, BatteryStatus, RoombaStatus } from './types';
+import { RoombaState, AppState, BatteryStatus, RoombaStatus, Position3D } from './types';
 
 declare global {
     interface Window { 
@@ -52,6 +52,7 @@ async function onMount() {
 
         renderEntitiesTable(connection, entities);
         renderRoombaCard(connection);
+        updateMap(window.state.position!, window.state.prevPosition);
     });
 
     hass.subscribeServices(connection, (services) => {
@@ -149,7 +150,7 @@ function renderRoombaCard(connection: hass.Connection) {
 
     // render position
     document.querySelector('.roomba-position')!.innerHTML =
-        `Position: (${roombaState.position!.join(', ')})`;
+        `Position: (${window.state.position!.join(', ')})`;
 
     // render action buttons
     const actionContainer = document.querySelector('.roomba-actions')!;
@@ -244,13 +245,39 @@ function getRoombaState(entities?: hass.HassEntities): RoombaState {
         state.binIcon = state.isBinFull ? 'mdi-delete' : 'mdi-delete-variant';
 
         if (roombaEntity.attributes.position) {
-            const r = /\((\d+),\s*(\d+),\s*(\d+)\)/gm;
-            const [anything, x, y, z, ...rest] = r.exec(roombaEntity.attributes.position)!;
-            state.position = [parseInt(x), parseInt(y), parseInt(z)];
+            window.state.prevPosition = window.state.position;
+            const reg = /\((-?\d+),\s*(-?\d+),\s*(-?\d+)\)/gm;
+            const [anything, x, y, r, ...rest] = reg.exec(roombaEntity.attributes.position)!;
+            console.log(x,y,r)
+            window.state.position = [parseInt(x), parseInt(y), parseInt(r)];
         }
     };
 
     return state;
+}
+
+function updateMap(position: Position3D, prevPosition?: Position3D): void {
+    console.log(prevPosition);
+    if (!prevPosition) {
+        // no-op
+    } else {
+        // offsets
+        const ox = 200;
+        const oy = 200;
+
+        const canvas = document.getElementById('map')! as HTMLCanvasElement;
+
+        const ctx = canvas.getContext('2d')!;
+
+        console.log(ctx);
+        // ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1;
+        ctx.strokeStyle = 'black';
+        ctx.beginPath();
+        ctx.moveTo(prevPosition[0] + ox, prevPosition[1] + oy);
+        ctx.lineTo(position[0] + ox, position[1] + oy);
+        ctx.stroke();
+    }
 }
 
 onMount();
