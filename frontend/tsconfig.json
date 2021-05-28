@@ -1,0 +1,12 @@
+{
+    "include": ["src"],
+    "compilerOptions": {
+        "target": "ES5",
+        "module": "commonjs",
+        "sourceMap": true,
+        "lib": ["DOM", "ES2015", "ES2016"],
+        "outDir": "./dist",
+        "strict": true,
+        "esModuleInterop": true
+    }
+}

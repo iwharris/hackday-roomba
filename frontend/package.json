@@ -1,0 +1,31 @@
+{
+    "name": "hackday-roomba-frontend",
+    "version": "0.0.1",
+    "description": "Roomba frontend for hackday",
+    "type": "module",
+    "scripts": {
+        "serve": "http-server -p 3000",
+        "compile": "browserify --debug src/app.ts -p [ tsify --project tsconfig.json ] -o dist/app.js",
+        "watch": "watchify -v --debug src/app.ts -p [ tsify --project tsconfig.json ] -o dist/app.js",
+        "prettier": "prettier --check {src,test}/**/*.[jt]s",
+        "prettier:fix": "prettier --write {src,test}/**/*.[jt]s"
+    },
+    "author": "Ian Harris",
+    "license": "MIT",
+    "devDependencies": {
+        "@iwharris/eslint-config": "latest",
+        "@iwharris/prettier-config": "latest",
+        "@typescript-eslint/eslint-plugin": "^4.22.0",
+        "browserify": "^17.0.0",
+        "eslint": "^7.24.0",
+        "eslint-plugin-prettier": "^3.4.0",
+        "http-server": "^0.12.3",
+        "prettier": "^2.2.1",
+        "tsify": "^5.0.4",
+        "typescript": "^4.1.3",
+        "watchify": "^4.0.0"
+    },
+    "dependencies": {
+        "home-assistant-js-websocket": "^5.10.0"
+    }
+}
