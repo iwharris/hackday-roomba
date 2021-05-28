@@ -47,13 +47,15 @@ async function onMount() {
 
     hass.subscribeEntities(connection, (entities) => {
         window.state.entities = entities;
+        const roombaState = getRoombaState(entities);
+        window.state.roombaState = roombaState;
+
         renderEntitiesTable(connection, entities);
-        renderRoombaTable(connection);
+        renderRoombaCard(connection);
     });
 
     hass.subscribeServices(connection, (services) => {
         window.state.services = services;
-        
     });
 
     // Clear url if we have been able to establish a connection
@@ -120,12 +122,12 @@ function renderEntitiesTable(connection: hass.Connection, entities: hass.HassEnt
         });
 }
 
-function renderRoombaTable(connection: hass.Connection) {
+function renderRoombaCard(connection: hass.Connection) {
     const root = document.querySelector('.roomba-actions')
 
     while (root?.lastChild) root.removeChild(root.lastChild);
 
-    const roombaState = getRoombaState(window.state.entities);
+    const roombaState = window.state.roombaState!;
     
     console.log(roombaState);
     
@@ -144,6 +146,10 @@ function renderRoombaTable(connection: hass.Connection) {
     // render bin status
     document.querySelector('.roomba-bin-status')!.innerHTML =
         `Bin: ${roombaState.isBinFull ? 'Full' : 'OK'} ${createIcon(roombaState.binIcon!).outerHTML}`;
+
+    // render position
+    document.querySelector('.roomba-position')!.innerHTML =
+        `Position: (${roombaState.position!.join(', ')})`;
 
     // render action buttons
     const actionContainer = document.querySelector('.roomba-actions')!;
@@ -218,7 +224,7 @@ function getRoombaState(entities?: hass.HassEntities): RoombaState {
         batteryStatus: BatteryStatus.UNKNOWN,
         batteryLevel: -1,
     };
-    
+
     if (entities) {
         const roombaEntity = entities[state.entityId];
 
@@ -236,6 +242,12 @@ function getRoombaState(entities?: hass.HassEntities): RoombaState {
 
         if (roombaEntity.attributes.bin_present && roombaEntity.attributes.bin_full) state.isBinFull = true;
         state.binIcon = state.isBinFull ? 'mdi-delete' : 'mdi-delete-variant';
+
+        if (roombaEntity.attributes.position) {
+            const r = /\((\d+),\s*(\d+),\s*(\d+)\)/gm;
+            const [anything, x, y, z, ...rest] = r.exec(roombaEntity.attributes.position)!;
+            state.position = [parseInt(x), parseInt(y), parseInt(z)];
+        }
     };
 
     return state;

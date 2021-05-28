@@ -6,6 +6,8 @@ export interface AppState {
     user?: HassUser;
 
     connection?: Connection;
+
+    roombaState?: RoombaState;
 }
 
 export interface RoombaState {
@@ -20,6 +22,8 @@ export interface RoombaState {
 
     isBinFull?: boolean;
     binIcon?: string;
+
+    position?: [number, number, number];
 }
 
 export enum RoombaStatus {
