@@ -2,6 +2,7 @@
     <head>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/5.9.55/css/materialdesignicons.min.css" integrity="sha512-vIgFb4o1CL8iMGoIF7cYiEVFrel13k/BkTGvs0hGfVnlbV6XjAA0M0oEHdWqGdAVRTDID3vIZPOHmKdrMAUChA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        <link rel="stylesheet" href="static/css/styles.css" />
     </head>
     <body>
         <div class="container-lg">
@@ -17,7 +18,14 @@
                         <img src="static/img/roomba.jpg" class="card-img-top" alt="roomba" />
                         <div class="card-body">
                             <h5 class="card-title">Roomba</h5>
+                            <span class="roomba-status-text"></span>
                         </div>
+                        <ul class="list-group list-group-flush">
+                            <!-- <li class="list-group-item roomba-operation-status"></li> -->
+                            <li class="list-group-item roomba-battery-status"></li>
+                            <li class="list-group-item roomba-bin-status"></li>
+                        </ul>
+                        <div class="card-body roomba-actions"></div>
                     </div>
                 </div>
 
@@ -37,7 +45,7 @@
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title">Map</h5>
-                            
+
                         </div>
                     </div>
                 </div>
