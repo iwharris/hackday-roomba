@@ -1,6 +1,7 @@
 import * as hass from 'home-assistant-js-websocket';
 import { saveTokens, loadTokens } from './auth-util';
 import { RoombaState, AppState, BatteryStatus, RoombaStatus, Position3D } from './types';
+import axios from 'axios';
 
 declare global {
     interface Window { 
@@ -158,6 +159,7 @@ function renderRoombaCard(connection: hass.Connection) {
         case RoombaStatus.DOCKED:
             actionContainer.appendChild(createButton('Start', () => {
                 hass.callService(connection, 'vacuum', 'start', undefined, { entity_id: roombaState.entityId });
+                sendAppwiseEvent('Started vacuuming.');
             }));
 
             break;
@@ -169,10 +171,12 @@ function renderRoombaCard(connection: hass.Connection) {
 
             actionContainer.appendChild(createButton('Start', () => {
                 hass.callService(connection, 'vacuum', 'start', undefined, { entity_id: roombaState.entityId });
+                sendAppwiseEvent('Started vacuuming.');
             }));
 
             actionContainer.appendChild(createButton('Return Home', () => {
                 hass.callService(connection, 'vacuum', 'return_to_base', undefined, { entity_id: roombaState.entityId });
+                sendAppwiseEvent('Returning home.');
             }));
 
             break;
@@ -180,6 +184,7 @@ function renderRoombaCard(connection: hass.Connection) {
         case RoombaStatus.RETURNING:
             actionContainer.appendChild(createButton('Stop', () => {
                 hass.callService(connection, 'vacuum', 'stop', undefined, { entity_id: roombaState.entityId });
+                sendAppwiseEvent('Stopping.');
             }));
 
             break;
@@ -191,14 +196,26 @@ function renderRoombaCard(connection: hass.Connection) {
 
             actionContainer.appendChild(createButton('Stop', () => {
                 hass.callService(connection, 'vacuum', 'stop', undefined, { entity_id: roombaState.entityId });
+                sendAppwiseEvent('Stopping.');
             }));
 
             actionContainer.appendChild(createButton('Return Home', () => {
                 hass.callService(connection, 'vacuum', 'return_to_base', undefined, { entity_id: roombaState.entityId });
+                sendAppwiseEvent('Returning home.');
             }));
             
             break;
     }
+}
+
+function sendAppwiseEvent(message: string, id: string = '1337'): void {
+    const uuid = 'e6cfb7e7-9ad8-4a90-8e81-885053d73bcd';
+    axios.post(`https://60d8cd0cc5a4.ngrok.io/api/events/${uuid}`, {
+        id,
+        message
+    }, {
+        headers: {'Access-Control-Allow-Origin': '*'}
+    });
 }
 
 function createIcon(className: string): HTMLElement {
