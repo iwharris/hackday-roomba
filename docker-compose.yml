@@ -9,5 +9,8 @@ services:
           - ./hassio-config:/config
         ports:
             - 8123:8123
+            - 8300:8300
+            - 51827:51827
+        # network_mode: host
         environment:
           - TZ=${TZ}
