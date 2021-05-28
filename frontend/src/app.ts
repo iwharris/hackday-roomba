@@ -135,6 +135,7 @@ function renderRoombaTable(connection: hass.Connection) {
         statusStr += `, ${BatteryStatus.CHARGING}` 
     }
     document.querySelector('.roomba-status-text')!.innerHTML = statusStr;
+    document.querySelector('.roomba-name')!.innerHTML = roombaState.friendlyName;
 
     // render battery status
     document.querySelector('.roomba-battery-status')!.innerHTML = 
@@ -212,6 +213,7 @@ function createButton(label: string, onClick: (this: GlobalEventHandlers, ev: Mo
 function getRoombaState(entities?: hass.HassEntities): RoombaState {
     const state: RoombaState = {
         entityId: 'vacuum.roomba',
+        friendlyName: 'Roomba',
         status: RoombaStatus.UNKNOWN,
         batteryStatus: BatteryStatus.UNKNOWN,
         batteryLevel: -1,
@@ -221,7 +223,7 @@ function getRoombaState(entities?: hass.HassEntities): RoombaState {
         const roombaEntity = entities[state.entityId];
 
         console.log(roombaEntity)
-
+        state.friendlyName = roombaEntity.attributes.friendly_name || state.friendlyName;
         state.batteryLevel = roombaEntity.attributes.battery_level;
         state.batteryIcon = roombaEntity.attributes.battery_icon;
 

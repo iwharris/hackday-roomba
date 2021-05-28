@@ -10,6 +10,7 @@ export interface AppState {
 
 export interface RoombaState {
     entityId: string;
+    friendlyName: string;
 
     status: RoombaStatus;
     batteryStatus: BatteryStatus;
